@@ -1,10 +1,13 @@
 {
   "name": "solana-cli",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "Solana cli tools",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "solana-cli": "bin/solana-cli"
   },
   "keywords": [
     "solana",
@@ -12,5 +15,12 @@
     "sdk"
   ],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@ethersproject/units": "^5.7.0",
+    "@solana/spl-token": "^0.4.8",
+    "@solana/spl-token-metadata": "^0.1.4",
+    "@solana/web3.js": "^1.95.0",
+    "commander": "^12.1.0"
+  }
 }
