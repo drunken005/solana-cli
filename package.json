@@ -1,6 +1,6 @@
 {
   "name": "solana-cli",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Solana cli tools",
   "main": "index.js",
   "scripts": {
@@ -16,6 +16,11 @@
   ],
   "author": "",
   "license": "ISC",
+  "homepage": "https://github.com/drunken005/solana-cli?tab=readme-ov-file#solana-cli",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/drunken005/solana-cli.git"
+  },
   "dependencies": {
     "@ethersproject/units": "^5.7.0",
     "@solana/spl-token": "^0.4.8",
