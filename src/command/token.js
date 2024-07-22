@@ -64,11 +64,27 @@ program.command("transfer")
     .requiredOption("-p, --programId <string>", "SPL-TOKEN programId version, values of (TOKEN || TOKEN_2022)", CommandUtil.checkTokenProgramIdVersion)
     .option("-c, --commitment <string>", "Configuring State Commitment, values of(finalized | confirmed | processed)", CommandUtil.checkCommitment, "finalized")
     .action(async (input) => {
-        try{
-            return await Connection.tokenTransfer(Connection.provider(input._network), input._privateKey, input.mint,input.destination, input.amount,input.commitment, input.programId);
-        }catch (error){
-            program.error(error.message)
+        try {
+            return await Connection.tokenTransfer(Connection.provider(input._network), input._privateKey, input.mint, input.destination, input.amount, input.commitment, input.programId);
+        } catch (error) {
+            program.error(error.message);
         }
     });
+
+program.command("authorize")
+    .description("Set spl token authority to new account")
+    .requiredOption("-m, --mint <string>", "Mint for the account")
+    .requiredOption("-a, --authorize <string>", "Type of authority to set, values of (mint|freeze|update)", CommandUtil.checkAuthority)
+    .requiredOption("-n, --newAuthority <number>", "New authority of the account")
+    .requiredOption("-p, --programId <string>", "SPL-TOKEN programId version, values of (TOKEN || TOKEN_2022)", CommandUtil.checkTokenProgramIdVersion)
+    .option("-c, --commitment <string>", "Configuring State Commitment, values of(finalized | confirmed | processed)", CommandUtil.checkCommitment, "finalized")
+    .action(async (input) => {
+        try {
+            return await Connection.setAuthority(Connection.provider(input._network), input._privateKey, input.mint, input.authorize, input.newAuthority, input.commitment, input.programId);
+        } catch (error) {
+            program.error(error.message);
+        }
+    });
+
 
 module.exports = program;

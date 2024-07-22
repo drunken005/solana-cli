@@ -29,13 +29,16 @@ const {
           createInitializeMetadataPointerInstruction,
           createMintToInstruction,
           TokenAccountNotFoundError,
-          createTransferCheckedInstruction
+          createTransferCheckedInstruction,
+          createSetAuthorityInstruction,
+          tokenMetadataUpdateAuthority,
       }          = require("@solana/spl-token");
 const bs58       = require("bs58");
 
 const {
           createInitializeInstruction,
           pack,
+          createUpdateAuthorityInstruction,
       } = require("@solana/spl-token-metadata");
 
 const DEFAULT_COMMITMENT = "finalized";
@@ -45,6 +48,11 @@ const TOKEN_PROGRAM_ID_MAPPING = {
     "TOKEN_2022": TOKEN_2022_PROGRAM_ID,
 };
 
+const AUTHORITY_TYPE = {
+    mint:   0,
+    freeze: 1,
+    update: 12,
+};
 
 class Connection {
 
@@ -404,7 +412,7 @@ class Connection {
             Number(transferAmount),
             tokenInfo.decimals,
             [],
-            programId
+            programId,
         );
 
         transaction.add(instruction);
@@ -413,6 +421,41 @@ class Connection {
         return transferHash;
     }
 
+    static async setAuthority(connection, payerPrivateKey, mint, authorityType, newAuthority, commitment = DEFAULT_COMMITMENT, programIdVersion) {
+        console.log(`- Start building set authority transaction ....`);
+        const payer        = Keypair.fromSecretKey(new Uint8Array(bs58.decode(payerPrivateKey)));
+        let programId      = TOKEN_PROGRAM_ID_MAPPING[programIdVersion];
+        let _authorityType = AUTHORITY_TYPE[authorityType];
+        const transaction  = new Transaction();
+        console.log(`  Token=${mint} || authorityType=${authorityType} || oldAuthority=${payer.publicKey} || newAuthority=${newAuthority}`);
+        if (_authorityType === AUTHORITY_TYPE.update) {
+            transaction.add(
+                createUpdateAuthorityInstruction({
+                    programId,
+                    metadata:     new PublicKey(mint),
+                    oldAuthority: payer.publicKey,
+                    newAuthority: new PublicKey(newAuthority),
+                }),
+            );
+        } else {
+            transaction.add(
+                createSetAuthorityInstruction(
+                    new PublicKey(mint),
+                    payer.publicKey,
+                    _authorityType,
+                    new PublicKey(newAuthority),
+                    [],
+                    programId,
+                ),
+            );
+        }
+        const authHash = await sendAndConfirmTransaction(connection, transaction, [payer], {commitment: DEFAULT_COMMITMENT});
+        console.log(`+ Set authority transaction send successful. hash="${authHash}".`);
+        return authHash;
+    }
+
+
 }
+
 
 module.exports = Connection;
