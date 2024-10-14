@@ -39,7 +39,8 @@ const {
           createInitializeInstruction,
           pack,
           createUpdateAuthorityInstruction,
-      } = require("@solana/spl-token-metadata");
+          createUpdateFieldInstruction,
+      }                          = require("@solana/spl-token-metadata");
 
 const DEFAULT_COMMITMENT = "finalized";
 
@@ -112,11 +113,7 @@ class Connection {
         if (!!programId) {
             filter.programId = TOKEN_PROGRAM_ID_MAPPING[programId];
         }
-        const tokenAccounts = await connection.getParsedTokenAccountsByOwner(
-            new PublicKey(address),
-            filter,
-            commitment,
-        );
+        const tokenAccounts = await connection.getParsedTokenAccountsByOwner(new PublicKey(address), filter, commitment);
         return tokenAccounts.value.map((token) => {
             return {
                 address:   token.account.data.parsed.info.owner,
@@ -212,27 +209,22 @@ class Connection {
         console.log(`Token metadata information:`);
         console.log(metadata);
 
-        const transaction = new Transaction().add(
-            SystemProgram.createAccount({
-                fromPubkey:       minter.publicKey,
-                newAccountPubkey: mintKeypair.publicKey,
-                space:            mintLen,
-                lamports,
-                programId,
-            }),
-            createInitializeMetadataPointerInstruction(mintKeypair.publicKey, minter.publicKey, mintKeypair.publicKey, programId),
-            createInitializeMint2Instruction(mintKeypair.publicKey, decimals, mintAuthority, freezeAuthority, programId),
-            createInitializeInstruction({
-                programId,
-                mint:            mintKeypair.publicKey,
-                metadata:        mintKeypair.publicKey,
-                name:            metadata.name,
-                symbol:          metadata.symbol,
-                uri:             metadata.uri,
-                mintAuthority:   mintAuthority,
-                updateAuthority: mintAuthority,
-            }),
-        );
+        const transaction = new Transaction().add(SystemProgram.createAccount({
+            fromPubkey:       minter.publicKey,
+            newAccountPubkey: mintKeypair.publicKey,
+            space:            mintLen,
+            lamports,
+            programId,
+        }), createInitializeMetadataPointerInstruction(mintKeypair.publicKey, minter.publicKey, mintKeypair.publicKey, programId), createInitializeMint2Instruction(mintKeypair.publicKey, decimals, mintAuthority, freezeAuthority, programId), createInitializeInstruction({
+            programId,
+            mint:            mintKeypair.publicKey,
+            metadata:        mintKeypair.publicKey,
+            name:            metadata.name,
+            symbol:          metadata.symbol,
+            uri:             metadata.uri,
+            mintAuthority:   mintAuthority,
+            updateAuthority: mintAuthority,
+        }));
         console.log({
             minter:    minter.publicKey.toBase58(),
             name,
@@ -288,27 +280,13 @@ class Connection {
         } catch (error) {
             if (error instanceof TokenAccountNotFoundError) {
                 console.log(`+ Destination associated token account not found, create associated token account instruction....`);
-                transaction.add(createAssociatedTokenAccountInstruction(
-                    payer.publicKey,
-                    new PublicKey(destinationAccount),
-                    new PublicKey(destination),
-                    new PublicKey(mint),
-                    programId,
-                    ASSOCIATED_TOKEN_PROGRAM_ID,
-                ));
+                transaction.add(createAssociatedTokenAccountInstruction(payer.publicKey, new PublicKey(destinationAccount), new PublicKey(destination), new PublicKey(mint), programId, ASSOCIATED_TOKEN_PROGRAM_ID));
             } else {
                 throw error;
             }
         }
         console.log(`- Create mint to instruction....`);
-        transaction.add(createMintToInstruction(
-            new PublicKey(mint),
-            new PublicKey(destinationAccount),
-            payer.publicKey,
-            Number(mintAmount),
-            [],
-            programId,
-        ));
+        transaction.add(createMintToInstruction(new PublicKey(mint), new PublicKey(destinationAccount), payer.publicKey, Number(mintAmount), [], programId));
         console.log(`- Start send mint token transaction....`);
         const mintTokenHash = await sendAndConfirmTransaction(connection, transaction, [payer], {commitment: DEFAULT_COMMITMENT});
         console.log(`+ Mint token transaction send successful. hash="${mintTokenHash}".`);
@@ -316,11 +294,7 @@ class Connection {
     }
 
     static generateATAAddress(address, mint, programId) {
-        const seeds = [
-            new PublicKey(address).toBytes(),
-            new PublicKey(programId).toBytes(),
-            new PublicKey(mint).toBytes(),
-        ];
+        const seeds = [new PublicKey(address).toBytes(), new PublicKey(programId).toBytes(), new PublicKey(mint).toBytes()];
         const [ata] = PublicKey.findProgramAddressSync(seeds, ASSOCIATED_TOKEN_PROGRAM_ID);
         return ata.toString();
     };
@@ -392,28 +366,12 @@ class Connection {
         } catch (error) {
             if (error instanceof TokenAccountNotFoundError) {
                 //TODO 这里需要计算创建关联账户转账到该账户到 lamports
-                transaction.add(createAssociatedTokenAccountInstruction(
-                    payer.publicKey,
-                    new PublicKey(receiverAccount),
-                    new PublicKey(destination),
-                    new PublicKey(mint),
-                    programId,
-                    ASSOCIATED_TOKEN_PROGRAM_ID,
-                ));
+                transaction.add(createAssociatedTokenAccountInstruction(payer.publicKey, new PublicKey(receiverAccount), new PublicKey(destination), new PublicKey(mint), programId, ASSOCIATED_TOKEN_PROGRAM_ID));
             } else {
                 throw error;
             }
         }
-        const instruction = createTransferCheckedInstruction(
-            new PublicKey(senderAccount),
-            new PublicKey(mint),
-            new PublicKey(receiverAccount),
-            new PublicKey(payer.publicKey),
-            Number(transferAmount),
-            tokenInfo.decimals,
-            [],
-            programId,
-        );
+        const instruction = createTransferCheckedInstruction(new PublicKey(senderAccount), new PublicKey(mint), new PublicKey(receiverAccount), new PublicKey(payer.publicKey), Number(transferAmount), tokenInfo.decimals, [], programId);
 
         transaction.add(instruction);
         const transferHash = await sendAndConfirmTransaction(connection, transaction, [payer], {commitment: DEFAULT_COMMITMENT});
@@ -429,31 +387,37 @@ class Connection {
         const transaction  = new Transaction();
         console.log(`  Token=${mint} || authorityType=${authorityType} || oldAuthority=${payer.publicKey} || newAuthority=${newAuthority}`);
         if (_authorityType === AUTHORITY_TYPE.update) {
-            transaction.add(
-                createUpdateAuthorityInstruction({
-                    programId,
-                    metadata:     new PublicKey(mint),
-                    oldAuthority: payer.publicKey,
-                    newAuthority: new PublicKey(newAuthority),
-                }),
-            );
+            transaction.add(createUpdateAuthorityInstruction({
+                programId,
+                metadata:     new PublicKey(mint),
+                oldAuthority: payer.publicKey,
+                newAuthority: new PublicKey(newAuthority),
+            }));
         } else {
-            transaction.add(
-                createSetAuthorityInstruction(
-                    new PublicKey(mint),
-                    payer.publicKey,
-                    _authorityType,
-                    new PublicKey(newAuthority),
-                    [],
-                    programId,
-                ),
-            );
+            transaction.add(createSetAuthorityInstruction(new PublicKey(mint), payer.publicKey, _authorityType, new PublicKey(newAuthority), [], programId));
         }
         const authHash = await sendAndConfirmTransaction(connection, transaction, [payer], {commitment: DEFAULT_COMMITMENT});
         console.log(`+ Set authority transaction send successful. hash="${authHash}".`);
         return authHash;
     }
 
+    static async updateMetadataField(connection, payerPrivateKey, mint, field, value, commitment = DEFAULT_COMMITMENT, programIdVersion) {
+        console.log(`- Start building update metadata field transaction ....`);
+        const payer       = Keypair.fromSecretKey(new Uint8Array(bs58.decode(payerPrivateKey)));
+        let programId     = TOKEN_PROGRAM_ID_MAPPING[programIdVersion];
+        const transaction = new Transaction();
+        console.log(`  Token=${mint} || Filed=${field} || value=${value}`);
+        transaction.add(createUpdateFieldInstruction({
+            programId,
+            metadata:        new PublicKey(mint),
+            updateAuthority: payer.publicKey,
+            field:           field,
+            value:           value,
+        }));
+        const updateMetadataHash = await sendAndConfirmTransaction(connection, transaction, [payer], {commitment: DEFAULT_COMMITMENT});
+        console.log(`+ Update token metadata field transaction send successful. hash="${updateMetadataHash}".`);
+        return updateMetadataHash;
+    }
 
 }
 

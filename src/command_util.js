@@ -50,6 +50,13 @@ class CommandUtil {
         }
         return authorize;
     }
+
+    static checkMetadataField(field, previous) {
+        if (!/^(name|symbol|uri)$/.test(field)) {
+            throw new InvalidArgumentError("Field type Just one of(name|symbol|uri)");
+        }
+        return field;
+    }
 }
 
 

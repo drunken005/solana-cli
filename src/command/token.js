@@ -11,7 +11,7 @@ program
     .hook("preAction", CommandUtil.subPreAction);
 
 program.command("info")
-    .description("Ϟ Mint new solana SPL-TOKEN Ϟ")
+    .description("Ϟ Get solana SPL-TOKEN informationϞ")
     .requiredOption("-m, --mint <string>", "Mint for the account")
     .option("-p, --programId <string>", "SPL-TOKEN programId version, values of (TOKEN || TOKEN_2022)", CommandUtil.checkTokenProgramIdVersion)
     .action(async (input) => {
@@ -20,7 +20,7 @@ program.command("info")
     });
 
 program.command("deploy")
-    .description("Ϟ Mint new solana SPL-TOKEN Ϟ")
+    .description("Ϟ Deploy new solana SPL-TOKEN Ϟ")
     .requiredOption("-n, --name <string>", "Token name")
     .requiredOption("-s, --symbol <string>", "Token symbol")
     .requiredOption("-u, --uri <string>", "Token URI")
@@ -35,7 +35,7 @@ program.command("deploy")
     });
 
 program.command("mint")
-    .description("Ϟ Mint new solana SPL-TOKEN Ϟ")
+    .description("Ϟ Min solana SPL-TOKEN amount Ϟ")
     .requiredOption("-m, --mint <string>", "Mint for the account")
     .requiredOption("-d, --destination <string>", "Address of the account to mint to")
     .requiredOption("-a, --amount <number>", "Amount to mint")
@@ -86,5 +86,19 @@ program.command("authorize")
         }
     });
 
+program.command("update")
+    .description("Update spl token metadata")
+    .requiredOption("-m, --mint <string>", "Mint for the account")
+    .requiredOption("-f, --field <string>", "Field to update in the metadata (name|symbol|uri)", CommandUtil.checkMetadataField)
+    .requiredOption("-V, --value <number>", " Value to write for the field")
+    .requiredOption("-p, --programId <string>", "SPL-TOKEN programId version, values of (TOKEN || TOKEN_2022)", CommandUtil.checkTokenProgramIdVersion)
+    .option("-c, --commitment <string>", "Configuring State Commitment, values of(finalized | confirmed | processed)", CommandUtil.checkCommitment, "finalized")
+    .action(async (input) => {
+        try {
+            return await Connection.updateMetadataField(Connection.provider(input._network), input._privateKey, input.mint, input.field, input.value, input.commitment, input.programId);
+        } catch (error) {
+            program.error(error.message);
+        }
+    });
 
 module.exports = program;
