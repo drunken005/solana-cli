@@ -36,7 +36,7 @@ program.command("deploy")
     });
 
 program.command("mint")
-    .description("Ϟ Min solana SPL-TOKEN amount Ϟ")
+    .description("Ϟ Mint solana SPL-TOKEN amount Ϟ")
     .requiredOption("-m, --mint <string>", "Mint for the account")
     .requiredOption("-d, --destination <string>", "Address of the account to mint to")
     .requiredOption("-a, --amount <number>", "Amount to mint")

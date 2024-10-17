@@ -9,7 +9,7 @@ const program = new Command();
 
 program
     .description("CLI to solana wallet")
-    .version("2.0.0", "-v, --version", "output the current version")
+    .version("2.0.1", "-v, --version", "output the current version")
     .hook("preAction", CommandUtil.preAction);
 
 program.command("wallet")

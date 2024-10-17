@@ -479,7 +479,7 @@ class Connection {
         console.log(`- Start building update metadata field transaction ....`);
         const payer   = Keypair.fromSecretKey(new Uint8Array(bs58.decode(payerPrivateKey)));
         let programId = TOKEN_PROGRAM_ID_MAPPING[programIdVersion];
-        console.log(`  Token=${mint} || Filed=${field} || value=${value}`);
+        console.log(`  Token=${mint} || Field=${field} || value=${value}`);
         let tokenInfo = await this.tokenInfo(connection, mint, commitment, programIdVersion);
         if (tokenInfo.extensions) {
             const transaction = new Transaction();
