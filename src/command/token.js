@@ -15,7 +15,7 @@ program.command("info")
     .requiredOption("-m, --mint <string>", "Mint for the account")
     .option("-p, --programId <string>", "SPL-TOKEN programId version, values of (TOKEN || TOKEN_2022)", CommandUtil.checkTokenProgramIdVersion)
     .action(async (input) => {
-        const metadata = await Connection.getTokenMetadata(Connection.provider(input._network), input.mint, null, input.programId);
+        const metadata = await Connection.tokenInfo(Connection.provider(input._network), input.mint, null, input.programId);
         console.log(metadata);
     });
 
@@ -26,9 +26,10 @@ program.command("deploy")
     .requiredOption("-u, --uri <string>", "Token URI")
     .requiredOption("-d, --decimals <number>", "Token decimals")
     .requiredOption("-a, --amount <number>", "First supply amount")
+    .requiredOption("-m, --metadataAccount <string>", "Whether to create metadataAccount, if not, use extension (only valid for TOKEN_2022_PROGRAM_ID)", CommandUtil.checkMetadataAccount)
     .requiredOption("-p, --programId <string>", "SPL-TOKEN programId version, values of (TOKEN || TOKEN_2022)", CommandUtil.checkTokenProgramIdVersion)
     .action(async (input) => {
-        const token = await Connection.deployToken(Connection.provider(input._network), input._privateKey, input.name, input.symbol, input.uri, input.decimals, input.amount, input.programId);
+        const token = await Connection.deployToken(Connection.provider(input._network), input._privateKey, input.name, input.symbol, input.uri, input.decimals, input.amount, input.metadataAccount, input.programId);
         console.log(`Token info create and mint success, details: `);
         console.log(token);
         return token;

@@ -44,6 +44,13 @@ class CommandUtil {
         return programIdVersion;
     }
 
+    static checkMetadataAccount(programIdVersion, previous) {
+        if (!/^(YES|NO)$/.test(programIdVersion)) {
+            throw new InvalidArgumentError("Just one of(YES|NO)");
+        }
+        return programIdVersion;
+    }
+
     static checkAuthority(authorize, previous) {
         if (!/^(mint|freeze|update)$/.test(authorize)) {
             throw new InvalidArgumentError("Authority type Just one of(mint|freeze)");
