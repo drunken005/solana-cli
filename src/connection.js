@@ -143,6 +143,13 @@ class Connection {
         });
     }
 
+    static async requestAirdrop(connection, receiver, amount) {
+        console.log(`- Start send airdrop ${amount} SOL to ${receiver} transaction .....`);
+        const hash = await connection.requestAirdrop(new PublicKey(receiver), Number(etherUtils.parseUnits(amount.toString(), 9).toString()));
+        console.log(`- Send airdrop ${amount} SOL to ${receiver} transaction successful. hash="${hash}"`);
+        return hash;
+    }
+
     static async getTokenSupply(connection, mint, commitment = DEFAULT_COMMITMENT) {
         const tokenInfo = await connection.getTokenSupply(new PublicKey(mint), commitment);
         return tokenInfo.value;

@@ -5,6 +5,7 @@
         * [Create wallet](#Create-wallet)
         * [Current wallet](#Current-wallet)
         * [Network](#Network)
+        * [Airdrop](#Airdrop)
         * [GetSlot](#GetSlot)
         * [GetRecentBlock](#GetRecentBlock)
         * [GetTransaction](#GetTransaction)
@@ -73,17 +74,39 @@ Output
 #### Network
 Return current network connection provider endpoint
 ```shell
-solana-cli getEndpoint
+solana-cli endpoint
 ```
 Output
 ```shell
 https://api.devnet.solana.com
 ```
 
+#### Airdrop
+Request SOL from a faucet (Support devnet and testnet)
+
+Usage
+```shell
+Usage: solana-cli airdrop [options]
+Options:
+  -d, --destination <string>  Account of airdrop recipient
+  -a, --amount <number>       The airdrop amount to request, in SOL (default: 1)
+  -h, --help                  display help for command
+
+```
+Example
+```shell
+solana-cli airdrop -d 2AZZJJghtv5HjYm9SiMGB6NAby8mMHBAr9qXfFVYE34c
+```
+Output
+```shell
+- Start send airdrop 1 SOL to 2AZZJJghtv5HjYm9SiMGB6NAby8mMHBAr9qXfFVYE34c transaction .....
+- Send airdrop 1 SOL to 2AZZJJghtv5HjYm9SiMGB6NAby8mMHBAr9qXfFVYE34c transaction successful. hash="262xhTkfTsXw1N6R3cn6BPfeN84i7per4BGSQSXYvTe3j5HnAByejABiaRVct6ZP4V92w243r82obHvh78xSyPiq"
+```
+
 #### GetSlot
 Fetch the slot that has reached the given or default commitment level, call rpc.getSlot()
 ```shell
-solana-cli getSlot
+solana-cli slot
 ```
 Output
 ```shell
@@ -93,7 +116,7 @@ Output
 #### GetRecentBlock
 Fetch the latest blockhash from the cluster
 ```shell
-solana-cli getRecentBlock
+solana-cli recentBlock
 ```
 Output
 ```shell
@@ -106,7 +129,7 @@ Output
 #### GetTransaction
 Fetch parsed transaction details for a confirmed or finalized transaction
 ```shell
-solana-cli getTransaction -hash 5Dx8utXK8W6Z1hnmrE9HmB4Xft6FPdSxXkAE8QKay7jVMr1ptbFBUpDsuYogdJi256dAF9ncDFqpYAdoseRXi7fD
+solana-cli transaction -hash 5Dx8utXK8W6Z1hnmrE9HmB4Xft6FPdSxXkAE8QKay7jVMr1ptbFBUpDsuYogdJi256dAF9ncDFqpYAdoseRXi7fD
 ```
 Output
 ```shell
@@ -120,7 +143,7 @@ Output
 #### GetBalance
 Fetch the SOL balance for the specified public key
 ```shell
-solana-cli getBalance -a 2sFWRzFKaCRLH88yDNtKdSxnrksYr148qeaG2Gw6HUsW
+solana-cli balance -a 2sFWRzFKaCRLH88yDNtKdSxnrksYr148qeaG2Gw6HUsW
 ```
 Output
 ```shell

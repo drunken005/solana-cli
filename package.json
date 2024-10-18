@@ -1,6 +1,6 @@
 {
   "name": "solana-cli",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "Solana cli tools",
   "main": "index.js",
   "scripts": {
@@ -11,8 +11,14 @@
   },
   "keywords": [
     "solana",
-    "wallet",
-    "sdk"
+    "solana-cli",
+    "solana wallet",
+    "sdk",
+    "token",
+    "spl-token",
+    "token metadata",
+    "metaplex",
+    "SPL Token Program"
   ],
   "author": "",
   "license": "ISC",

@@ -9,7 +9,7 @@ const program = new Command();
 
 program
     .description("CLI to solana wallet")
-    .version("2.0.3", "-v, --version", "output the current version")
+    .version("2.0.4", "-v, --version", "output the current version")
     .hook("preAction", CommandUtil.preAction);
 
 program.command("wallet")
@@ -43,7 +43,7 @@ program.command("createWallet")
         return wallet;
     });
 
-program.command("getEndpoint")
+program.command("endpoint")
     .description("Return current connection provider endpoint")
     .action((input) => {
         const endpoint = Connection.endpoint(input._network);
@@ -51,7 +51,7 @@ program.command("getEndpoint")
         return endpoint;
     });
 
-program.command("getSlot")
+program.command("slot")
     .description("Fetch the slot that has reached the given or default commitment level, call rpc.getSlot()")
     .option("-c, --commitment <string>", "Configuring State Commitment, values of(finalized | confirmed | processed)", CommandUtil.checkCommitment, "finalized")
     .action(async (input) => {
@@ -60,7 +60,7 @@ program.command("getSlot")
         return slot;
     });
 
-program.command("getRecentBlock")
+program.command("recentBlock")
     .description("Fetch the latest blockhash from the cluster")
     .option("-c, --commitment <string>", "Configuring State Commitment, values of(finalized | confirmed | processed)", CommandUtil.checkCommitment, "finalized")
     .action(async (input) => {
@@ -69,7 +69,7 @@ program.command("getRecentBlock")
         return recentBlock;
     });
 
-program.command("getTransaction")
+program.command("transaction")
     .description("Fetch parsed transaction details for a confirmed or finalized transaction")
     .requiredOption("-hash, --hash <string>", "Transaction hash")
     .option("-c, --commitment <string>", "Configuring State Commitment, values of(finalized | confirmed | processed)", CommandUtil.checkCommitment, "finalized")
@@ -79,7 +79,7 @@ program.command("getTransaction")
         return transaction;
     });
 
-program.command("getBalance")
+program.command("balance")
     .description("Fetch the balance for the specified public key")
     .requiredOption("-a, --address <string>", "Address public key")
     .option("-c, --commitment <string>", "Configuring State Commitment, values of(finalized | confirmed | processed)", CommandUtil.checkCommitment, "finalized")
@@ -101,6 +101,18 @@ program.command("transfer")
             program.error(error.message);
         }
     }).hook("preAction", CommandUtil.subPreAction);
+
+program.command("airdrop")
+    .description("Request SOL from a faucet")
+    .requiredOption("-d, --destination <string>", "Account of airdrop recipient")
+    .option("-a, --amount <number>", "The airdrop amount to request, in SOL", 1)
+    .action(async (input) => {
+        try {
+            return await Connection.requestAirdrop(Connection.provider(input._network),input.destination, input.amount);
+        }catch (error){
+            program.error(error.message);
+        }
+    }).hook("preAction", CommandUtil.checkNetwork);
 
 const tokenCommand = require("./token");
 program.addCommand(tokenCommand);
