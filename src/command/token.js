@@ -11,7 +11,7 @@ program
     .hook("preAction", CommandUtil.subPreAction);
 
 program.command("info")
-    .description("Ϟ Get solana SPL-TOKEN informationϞ")
+    .description("Get solana SPL-TOKEN information")
     .requiredOption("-m, --mint <string>", "Mint for the account")
     .option("-p, --programId <string>", "SPL-TOKEN programId version, values of (TOKEN || TOKEN_2022)", CommandUtil.checkTokenProgramIdVersion)
     .action(async (input) => {
@@ -20,7 +20,7 @@ program.command("info")
     });
 
 program.command("deploy")
-    .description("Ϟ Deploy new solana SPL-TOKEN Ϟ")
+    .description("Deploy new solana SPL-TOKEN")
     .requiredOption("-n, --name <string>", "Token name")
     .requiredOption("-s, --symbol <string>", "Token symbol")
     .requiredOption("-u, --uri <string>", "Token URI")
@@ -36,7 +36,7 @@ program.command("deploy")
     });
 
 program.command("mint")
-    .description("Ϟ Mint solana SPL-TOKEN amount Ϟ")
+    .description("Mint solana SPL-TOKEN amount")
     .requiredOption("-m, --mint <string>", "Mint for the account")
     .requiredOption("-d, --destination <string>", "Address of the account to mint to")
     .requiredOption("-a, --amount <number>", "Amount to mint")

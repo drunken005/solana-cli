@@ -2,24 +2,22 @@
     * [Install](#Install)
     * [Environment variable settings](#Environment-variable-settings)
     * [Commands](#Commands)
-        * [Wallet](###Wallet)
-            * [Create wallet](#Create-wallet)
-            * [Current wallet](#Current-wallet)
-            * [Network](#Network)
-            * [GetSlot](#GetSlot)
-            * [GetRecentBlock](#GetRecentBlock)
-            * [GetTransaction](#GetTransaction)
-            * [GetBalance](#GetBalance)
-            * [Transfer](#Transfer)
-    * [SubCommands](#SubCommands)
-        * [SPL-Token](###SPL-Token)
-            * [Deploy SPL-Token](#Deploy-SPL-Token)
-            * [SPL-Token Info](#SPL-Token-Info)
-            * [Mint SPL-Token](#Mint-SPL-Token)
-            * [SPL-Token Balance](#SPL-Token-Balance)
-            * [SPL-Token Transfer](#SPL-Token-Transfer)
-            * [Update SPL-Token authorize](#Update-SPL-Token-authorize)
-            * [Update SPL-Token metadata](#Update-SPL-Token-metadata)
+        * [Create wallet](#Create-wallet)
+        * [Current wallet](#Current-wallet)
+        * [Network](#Network)
+        * [GetSlot](#GetSlot)
+        * [GetRecentBlock](#GetRecentBlock)
+        * [GetTransaction](#GetTransaction)
+        * [GetBalance](#GetBalance)
+        * [Transfer](#Transfer)
+    * [SubCommands [Token]](#SubCommands)
+        * [Deploy SPL-Token](#Deploy-SPL-Token)
+        * [SPL-Token Info](#SPL-Token-Info)
+        * [Mint SPL-Token](#Mint-SPL-Token)
+        * [SPL-Token Balance](#SPL-Token-Balance)
+        * [SPL-Token Transfer](#SPL-Token-Transfer)
+        * [Update SPL-Token authorize](#Update-SPL-Token-authorize)
+        * [Update SPL-Token metadata](#Update-SPL-Token-metadata)
 
 # solana-cli
 
@@ -75,7 +73,7 @@ Output
 #### Network
 Return current network connection provider endpoint
 ```shell
-solana-cli
+solana-cli getEndpoint
 ```
 Output
 ```shell
@@ -159,9 +157,9 @@ Output
 ```shell
 solana-cli token [options] [command]
 Commands:
-  info [options]        Ϟ Get solana SPL-TOKEN informationϞ
-  deploy [options]      Ϟ Deploy new solana SPL-TOKEN Ϟ
-  mint [options]        Ϟ Min solana SPL-TOKEN amount Ϟ
+  info [options]        Get solana SPL-TOKEN information
+  deploy [options]      Deploy new solana SPL-TOKEN
+  mint [options]        Mint solana SPL-TOKEN amount
   getBalance [options]  Fetch parsed token accounts owned by the specified account
   transfer [options]    Transfer spl token to the destination address
   authorize [options]   Set spl token authority to new account
