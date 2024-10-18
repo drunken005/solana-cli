@@ -1,10 +1,31 @@
-[TOC]
+* [solana-cli](#solana-cli)
+    * [Install](###Install)
+    * [Environment variable settings](##Environment-variable-settings)
+    * [Commands](##Commands)
+        * [Wallet](###Wallet)
+            * [Create wallet](####Create-wallet)
+            * [Current wallet](####Current-wallet)
+            * [Network](####Network)
+            * [GetSlot](####GetSlot)
+            * [GetRecentBlock](####GetRecentBlock)
+            * [GetTransaction](####GetTransaction)
+            * [GetBalance](####GetBalance)
+            * [Transfer](#####Transfer)
+    * [SubCommands](##SubCommands)
+        * [SPL-Token](###SPL-Token)
+            * [Deploy SPL-Token](####Deploy-SPL-Token)
+            * [SPL-Token Info](####SPL-Token-Info)
+            * [Mint SPL-Token](####Mint-SPL-Token)
+            * [SPL-Token Balance](####SPL-Token-Balance)
+            * [SPL-Token Transfer](####SPL-Token-Transfer)
+            * [Update SPL-Token authorize](####Update-SPL-Token-authorize)
+            * [Update SPL-Token metadata](####Update-SPL-Token-metadata)
 
 # solana-cli
 
 **solana cli for nodejs**
 
-Support SOL transfer balance query and SPL-TOKEN create, mint, transfer, metadata update, authorize update.
+Support SOL transfer balance query and SPL-TOKEN create, mint, transfer, metadata update, authorize update. Support metaplex token metedata account
 
 ### Install
 
